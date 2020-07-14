@@ -6,9 +6,10 @@ import { AuthModule } from './auth/auth.module';
 import {MongooseModule}from "@nestjs/mongoose"
 import {ConfigModule} from "@nestjs/config" ; 
 import { UsersModule } from './users/users.module';
+import { TypegooseModule } from 'nestjs-typegoose';
 
 @Module({
-  imports: [MongooseModule.forRoot("mongodb://localhost:27017/blog-api" , {
+  imports: [TypegooseModule.forRoot("mongodb://localhost:27017/blog-api" , {
     useCreateIndex : true , 
     useFindAndModify : true 
   }), ProductsModule, AuthModule  , 

@@ -1,8 +1,9 @@
 import { Controller, Get, UseGuards, Param, Put, Body } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from '@nestjs/passport';
-import { UserModel } from 'models/user.model';
+// import { UserS, UserSchemacheUserSchema } from 'src/models/user.model';
 import { User } from 'src/auth/user.decorator';
+import { UserSchema } from 'src/models/user.model';
 
 @Controller('profiles')
 export class ProfileController {
@@ -10,7 +11,7 @@ export class ProfileController {
 
   @Get('/:username')
 //   @UseGuards(AuthGuard('jwt'))
-  async getProfile(@Param('username') username: string): Promise<UserModel> {
+  async getProfile(@Param('username') username: string): Promise<UserSchema> {
     console.log(username);
     return await this.userService.getUser(username);
   }
@@ -19,7 +20,7 @@ export class ProfileController {
   async followUser(
     @User() user,
     @Param("username") following: string,
-  ): Promise<UserModel> {
+  ): Promise<UserSchema> {
     return await this.userService.addUserFollower(following, user.username);
 }
 @Put("/:username/followers")
@@ -27,7 +28,7 @@ export class ProfileController {
   async addUserFollower(
     @User() user,
     @Param("username") follower: string,
-  ): Promise<UserModel> {
+  ): Promise<UserSchema> {
     return await this.userService.addUserFollower(user.username, follower);
   
 }

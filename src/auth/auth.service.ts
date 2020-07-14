@@ -1,20 +1,21 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { UserModel } from 'models/user.model';
+import { UserModel, UserSchema } from '../models/user.model';
 import { Model } from "mongoose"
-import { LoginDto } from 'src/dto/login.dto';
-import { RegisterDto } from "src/dto/register.dto"
+import { LoginDto } from '../dto/login.dto';
+import { RegisterDto } from "../dto/register.dto"
 import { JwtService } from "@nestjs/jwt";  // must be injected as a service (just like Model)
 import *  as jwt from "jsonwebtoken"
 import * as bcryptjs from "bcryptjs"
+import { ReturnModelType } from '@typegoose/typegoose';
 @Injectable()
 export class AuthService {
     private readonly secret =  process.env.TOKEN_SECRET; 
-    constructor(@InjectModel("User") private readonly userModel: Model<UserModel>,
+    constructor(@InjectModel("User") private readonly userModel: ReturnModelType<typeof UserSchema>,
         private jwtService: JwtService) { }
 
 
-    async login(loginDto: LoginDto): Promise<UserModel> | null {
+    async login(loginDto: LoginDto): Promise<UserSchema> | null {
         const user = await this.userModel.findOne({ email: loginDto.email });
         if (user) {
             let isTrue = await bcryptjs.compare(loginDto.password, user.password);
@@ -30,7 +31,7 @@ export class AuthService {
         }
 
     }
-    async register(registerDto: RegisterDto): Promise<UserModel> | null {
+    async register(registerDto: RegisterDto): Promise<UserSchema> | null {
         let user = new this.userModel(registerDto)
         user.password = await bcryptjs.hash(user.password, 10);
         const payload = { username: user.username }

@@ -3,13 +3,14 @@ import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-jwt";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { UserModel } from "models/user.model";
+import { UserModel, UserSchema } from "src/models/user.model";
 import { ExtractJwt } from "passport-jwt";
+import { ReturnModelType } from "@typegoose/typegoose";
 
 @Injectable()
 export class JwtService extends PassportStrategy(Strategy) {
     constructor(
-        @InjectModel("User") private readonly userModel: Model<UserModel>
+        @InjectModel("User") private readonly userModel :ReturnModelType<typeof UserSchema> 
     ) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme("Token"),

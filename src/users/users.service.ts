@@ -1,28 +1,30 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UserModel } from 'models/user.model';
+import { UserModel, UserSchema  } from 'src/models/user.model';
+import { ReturnModelType } from '@typegoose/typegoose';
+import { UsersModule } from './users.module';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel('User') private readonly userModel: Model<UserModel>,
+    @InjectModel('User') private readonly userModel: ReturnModelType<typeof UserSchema>,
   ) {}
 
-  async getUser( username ): Promise<UserModel> | null {
-    let user = await this.userModel.findOne({ username }).exec();
+  async getUser( username ): Promise<UserSchema> | null {
+    let user = await this.userModel.findOne({ username }).populate("followers").exec();
     if (!user) {
       throw new NotFoundException('user was not found');
     }
     return user;
   }
-  async updateUser(payload: UserModel, data: UserModel) {
+  async updateUser(payload: UserSchema, data: UserSchema) {
     return await this.userModel
-      .findOneAndUpdate(payload.id, data, { new: true })
+      .findOneAndUpdate(payload._id, data, { new: true })
       .exec();
   }
 
-  async addUserFollower(user: string, follower: string): Promise<UserModel> {
+  async addUserFollower(user: string, follower: string): Promise<UserSchema> {
     let userA = await this.userModel.findOne({ username: user });
     let userB = await this.userModel.findOne({ username: follower });
     if (userA && userB) {
@@ -31,11 +33,12 @@ export class UsersService {
       if(!isFollower)  userA.followers.push(userB.id);
       if(!isFollowing) userB.following.push(userA.id);
       await userB.save();
+      await userA.save() ; 
       return (await userA.save()).populate("followers");
     }
     throw new NotFoundException('user was not found');
   }
-  async unFollow(user: string, following: string): Promise<UserModel> {
+  async unFollow(user: string, following: string): Promise<UserSchema> {
     let userA = await this.userModel.findOne({ username: user });
     let userB = await this.userModel.findOne({ username: following });
     if (userA && userB) {

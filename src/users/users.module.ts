@@ -3,14 +3,12 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { AuthModule } from 'src/auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserSchema } from 'models/user.model';
+import { UserModel, UserSchema } from 'src/models/user.model';
 import { ProfileController } from './profile.controller';
+import {TypegooseModule} from "nestjs-typegoose" ; 
 
 @Module({
-  imports : [AuthModule , MongooseModule.forFeature([{
-    name: "User" , 
-    schema : UserSchema
-  }])]   ,   
+  imports : [AuthModule , TypegooseModule.forFeature([UserSchema])]   ,   
   controllers: [UsersController , ProfileController],
   providers: [UsersService]
 })
