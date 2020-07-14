@@ -1,26 +1,28 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+import { InjectModel } from 'nestjs-typegoose';
 import { Model } from 'mongoose';
-import { UserModel, UserSchema  } from 'src/models/user.model';
+import {UserSchema  } from 'src/models/user.model';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { UsersModule } from './users.module';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel('User') private readonly userModel: ReturnModelType<typeof UserSchema>,
+    @InjectModel(UserSchema) private readonly userModel: ReturnModelType<typeof UserSchema>,
   ) {}
 
-  async getUser( username ): Promise<UserSchema> | null {
-    let user = await this.userModel.findOne({ username }).populate("followers").exec();
-    if (!user) {
+  async getUser( username : string ): Promise<UserSchema> | null {
+    // const {username}  = user ; 
+    console.log("from user service" , username)  ; 
+    let expectedUser = await this.userModel.findOne({ username }).populate("followers").exec();
+    if (!expectedUser) {
       throw new NotFoundException('user was not found');
     }
-    return user;
+    return expectedUser;
   }
-  async updateUser(payload: UserSchema, data: UserSchema) {
+  async updateUser(payload, data: UserSchema) {
     return await this.userModel
-      .findOneAndUpdate(payload._id, data, { new: true })
+      .findOneAndUpdate(payload.id, data, { new: true })
       .exec();
   }
 

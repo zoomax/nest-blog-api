@@ -10,7 +10,7 @@ export class ProfileController {
   constructor(private readonly userService: UsersService) {}
 
   @Get('/:username')
-//   @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   async getProfile(@Param('username') username: string): Promise<UserSchema> {
     console.log(username);
     return await this.userService.getUser(username);

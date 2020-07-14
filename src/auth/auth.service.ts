@@ -1,7 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { UserModel, UserSchema } from '../models/user.model';
-import { Model } from "mongoose"
+import { InjectModel } from 'nestjs-typegoose';
+import { UserSchema } from '../models/user.model';
 import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from "../dto/register.dto"
 import { JwtService } from "@nestjs/jwt";  // must be injected as a service (just like Model)
@@ -11,7 +10,7 @@ import { ReturnModelType } from '@typegoose/typegoose';
 @Injectable()
 export class AuthService {
     private readonly secret =  process.env.TOKEN_SECRET; 
-    constructor(@InjectModel("User") private readonly userModel: ReturnModelType<typeof UserSchema>,
+    constructor(@InjectModel(UserSchema) private readonly userModel: ReturnModelType<typeof UserSchema>,
         private jwtService: JwtService) { }
 
 

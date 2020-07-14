@@ -7,13 +7,11 @@ import * as bcryptjs from 'bcryptjs';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtService } from './jwt.service';
+import { TypegooseModule } from 'nestjs-typegoose';
 @Module({
   imports: [
-    MongooseModule.forFeature([
-      {
-        name: 'User',
-        schema: UserSchema,
-      },
+    TypegooseModule.forFeature([
+      UserSchema
     ]),
 
     JwtModule.register({
@@ -28,4 +26,4 @@ import { JwtService } from './jwt.service';
   controllers: [AuthController],
   exports: [PassportModule],
 })
-export class AuthModule {}
+export class AuthModule { }

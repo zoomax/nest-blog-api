@@ -12,7 +12,7 @@ export class UsersController {
   @UseGuards(AuthGuard('jwt'))
   async getCurrentUser(@User() payload): Promise<UserSchema> {
     console.log(process.env.TOKEN_SECRET);
-    return await this.usersService.getUser(payload);
+    return await this.usersService.getUser(payload.username);
   }
 
   @Put()
