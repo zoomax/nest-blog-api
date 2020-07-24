@@ -1,24 +1,33 @@
+import { prop } from '@typegoose/typegoose';
+import { Document, Schema } from 'mongoose';
 
-import {prop} from '@typegoose/typegoose';
-import {Document} from "mongoose"
-
-
-export class Product {
-  @prop({
-    required: true,
-  })
+interface IPRoductSchema extends Document {
   title: string;
-  @prop({
-    required: true,
-  })
   description: string;
-  @prop({
-    required: true,
-  })
   price: number;
-  @prop({
-    required: true,
-  })
   amount: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
-// export const ProductSchema = SchemaFactory.createForClass(Product);
+
+const ProductSchema = new Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  amount: {
+    type: Number,
+    required: true,
+  },
+});
+export  { 
+  IPRoductSchema , ProductSchema
+}

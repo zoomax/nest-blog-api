@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from 'src/dto/createProduct.dto';
-import { Product } from 'src/models/product.model';     
+import {IPRoductSchema as Product } from 'src/models/product.model';     
 
 @Controller('products')
 export class ProductsController {

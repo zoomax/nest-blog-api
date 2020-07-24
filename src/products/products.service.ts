@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from 'nestjs-typegoose';
+import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Product } from 'src/models/product.model';
+import { ProductSchema, IPRoductSchema } from 'src/models/product.model';
 import { CreateProductDto } from 'src/dto/createProduct.dto';
 import { promises } from 'dns';
 import { ReturnModelType } from '@typegoose/typegoose';
@@ -10,16 +10,16 @@ import { ReturnModelType } from '@typegoose/typegoose';
 @Injectable()
 export class ProductsService {
   constructor(
-    @InjectModel(Product) private readonly productsModel: ReturnModelType<typeof Product>,
+    @InjectModel("products") private readonly productsModel: Model<IPRoductSchema>,
   ) {}
 
-  async createProduct(productDto: CreateProductDto): Promise<Product> | null {
+  async createProduct(productDto: CreateProductDto): Promise<IPRoductSchema> | null {
     const newProduct = new this.productsModel(productDto);
     const product = await newProduct.save();
     return product;
   }
 
-  async getProducts(): Promise<Product[]> | null {
+  async getProducts(): Promise<IPRoductSchema[]> | null {
     return await this.productsModel.find();
   }
 }

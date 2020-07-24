@@ -1,15 +1,15 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-jwt";
-import { InjectModel } from "nestjs-typegoose";
-import {UserSchema } from "src/models/user.model";
+import {InjectModel  } from "@nestjs/mongoose";
+import {UserSchema, IUser } from "src/models/user.model";
 import { ExtractJwt } from "passport-jwt";
-import { ReturnModelType } from "@typegoose/typegoose";
+import { Model  } from "mongoose";
 
 @Injectable()
 export class JwtService extends PassportStrategy(Strategy) {
     constructor(
-        @InjectModel(UserSchema) private readonly userModel :ReturnModelType<typeof UserSchema> 
+        @InjectModel("users") private readonly userModel :Model<IUser> 
     ) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme("Token"),
